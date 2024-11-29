@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="Dark.js" defer></script>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 1200px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        /* Image div */
+        .image-div {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #fff;
+            border-radius: 10px;
+            animation: fadeIn 1.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Content div containing announcements, video, and chatbot */
+        .content {
+            display: flex;
+            width: 100%;
+            gap: 20px;
+        }
+        
+        /* Announcements section */
+        .announcements {
+            flex: 2;
+            background-color: #fff;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        
+        .announcements h3 {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .announcements h3::before {
+            content: '📢';
+        }
+
+        .announcements .content-box {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        .announcements textarea {
+            width: 100%;
+            height: 180px; /* Adjust as needed */
+            border: none;
+            resize: none;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        
+        .rightside {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        
+        .video-div {
+            background-color: #fff;
+            padding: 0;
+            height: 150px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .video-div iframe {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Chatbot section */
+        .chatbot-div {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 10px;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chatbot-div h3::before {
+            content: '🤖';
+        }
+
+
+.chatbot-div h3 {
+    margin-bottom: 10px;
+}
+
+
+.photo {
+    width: 200px;  
+    height: 200px; 
+    overflow: hidden;
+    border-radius: 5%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+
+.photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    border-radius: 5%; 
+}
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h2>Student Portal</h2>
+        <div class="nav-links">
+            <div class="nav-item"><a href="#">Home</a></div>
+            <div class="nav-item">
+                <a href="#">Profile</a>
+                <div class="dropdown-content">
+                    <a href="sProfileEdit.html">Edit Profile</a>
+                    <a href="sPasswordChange.html">Change Password</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <a href="#">Courses</a>
+                <div class="dropdown-content">
+                    <a href="#">Request Book</a>
+                    <a href="#">Pre-Registration</a>
+                    <a href="#">Registration</a>
+                    <a href="sCourseEvalution.html">Evaluate Course</a>
+                    <a href="#">Drop Course or Semester</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <a href="#">Academics</a>
+                <div class="dropdown-content">
+                    <a href="#">Result</a>
+                    <a href="#">Class Routine</a>
+                    <a href="#">Exam Routine & Admit Card</a>
+                    <a href="BusLocation.html">Buses Location</a>
+                </div>
+            </div>
+            <button class="toggle-btn" onclick="toggleDarkMode()">🌞</button>
+        </div>
+    </div>
+
+    <div class="container">
+       
+        <div class="image-div">
+            <h1>Welcome to Student Portal.</h1>
+        </div>
+
+        <div class="content">
+
+            <div class="announcements">
+                <h3>Announcements</h3>
+                <div class="content-box">
+                    
+                    <textarea name="announce" id="announce"></textarea>
+                </div>
+            </div>
+
+            
+            <div class="rightside">
+                <!-- Video Section -->
+                <div class="video-div">
+                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/JqzceJHRWgc?si=08mBvJleQtDW78m7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+
+                <div class="chatbot-div">
+                    <h3>Chatbot is over there.</h3>
+                    <div class="photo">
+                        <img src="photo/66-512.webp" alt="Chatbot Icon">
+                    </div>
+                    <div class="chatbot-messages" id="chatbot-messages">
+                        <!-- Chatbot messages will appear here -->
+                    </div>
+                </div>
+                    
+            </div>
+        </div>
+    </div>
+
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+        (function() {
+            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/6730ab034304e3196adfd526/1icb1o1j9';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    </script>
+</body>
+</html>
