@@ -25,8 +25,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($id) && !empty($password)) {
         if (is_numeric($id)) {
             if (strlen($id) == 9) {
-                // Check student table for 9-digit IDs
-                $stmt = $conn->prepare("SELECT name FROM student WHERE Id = ? AND password = ?");
+                // Check StudentInformation table for 9-digit IDs
+                $stmt = $conn->prepare("SELECT StudentName FROM StudentInformation WHERE StudentID = ? AND StudentsPassword = ?");
                 $stmt->bind_param("is", $id, $password);
                 $stmt->execute();
                 $result = $stmt->get_result();
@@ -34,18 +34,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if ($result->num_rows > 0) {
                     $row = $result->fetch_assoc();
                     // Set session variables
-                    $_SESSION['username'] = $row['name']; //username
+                    $_SESSION['username'] = $row['StudentName'];
                     $_SESSION['id'] = $id;
 
                     // Redirect to student dashboard
                     header("Location: StudentHome.php");
                     exit();
                 } else {
-                    $error = "Invalid credentials";
+                    $error = "Invalid credentials for Student";
                 }
             } elseif (strlen($id) == 5) {
-                // Check teacher table for 5-digit IDs
-                $stmt = $conn->prepare("SELECT name FROM teacher WHERE Id = ? AND password = ?");
+                // Check TeacherInformation table for 5-digit IDs
+                $stmt = $conn->prepare("SELECT TeacherName FROM TeacherInformation WHERE TeacherID = ? AND TeachersPassword = ?");
                 $stmt->bind_param("is", $id, $password);
                 $stmt->execute();
                 $result = $stmt->get_result();
@@ -53,29 +53,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if ($result->num_rows > 0) {
                     $row = $result->fetch_assoc();
                     // Set session variables
-                    $_SESSION['username'] = $row['name'];
+                    $_SESSION['username'] = $row['TeacherName'];
                     $_SESSION['id'] = $id;
 
                     // Redirect to teacher dashboard
+                    //header("Location: TeacherHome.php");
                     header("Location: index.html");
                     exit();
                 } else {
-                    $error = "Invalid credentials";
+                    $error = "Invalid credentials for Teacher";
                 }
             } else {
-                $error = "Invalid credentials";
+                $error = "Invalid ID length";
             }
         } else {
-            $error = "Invalid credentials";
+            $error = "ID must be numeric";
         }
     } else {
-        $error = "Please fill out the fields";
+        $error = "Please fill out all fields";
     }
 }
 
 $conn->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">

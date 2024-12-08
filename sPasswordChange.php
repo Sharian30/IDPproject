@@ -1,12 +1,13 @@
-
 <?php
 session_start();
+require_once 'config.php'; // Include database connection file
 
 // Check if the user is logged in
 if (!isset($_SESSION['username']) || !isset($_SESSION['id'])) {
     header('Location: login.php');
     exit();
 }
+
 // Logout logic
 if (isset($_GET['logout'])) {
     session_unset();
@@ -15,6 +16,63 @@ if (isset($_GET['logout'])) {
     exit();
 }
 
+// Initialize messages
+$message = '';
+$error = '';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $old_password = $_POST['old_password'];
+    $new_password = $_POST['new_password'];
+    $confirm_password = $_POST['confirm_password'];
+    $user_id = $_SESSION['id'];
+
+    // Check if the new password matches the confirmation
+    if ($new_password !== $confirm_password) {
+        $error = 'New password and confirmation do not match.';
+    } else {
+        // Connect to the database
+        $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+        // Check connection
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+
+        // Fetch the current password from the database
+        $sql = "SELECT StudentsPassword FROM StudentInformation WHERE StudentID = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($current_password);
+
+        if ($stmt->fetch()) {
+            // Verify the old password
+            if ($old_password === $current_password) {
+                // Update the password in the database
+                $update_sql = "UPDATE StudentInformation SET StudentsPassword = ? WHERE StudentID = ?";
+                $update_stmt = $conn->prepare($update_sql);
+                $update_stmt->bind_param("si", $new_password, $user_id);
+
+                if ($update_stmt->execute()) {
+                    $_SESSION['success_message'] = 'Password Successfully Updated!';
+                    header('Location: ' . $_SERVER['PHP_SELF']); // Redirect to the same page
+                    exit();
+                } else {
+                    $error = 'Error updating password. Please try again.';
+                }
+                $update_stmt->close();
+            } else {
+                $error = 'Current password is incorrect.';
+            }
+        } else {
+            $error = 'User not found.';
+        }
+
+        $stmt->close();
+        $conn->close();
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -261,6 +319,7 @@ if (isset($_GET['logout'])) {
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            align-items: center;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -270,117 +329,72 @@ if (isset($_GET['logout'])) {
            color: white;
        }
 
-         /* Image div */
-        .image-div {
-            width: 100%;
-            height: 160px; 
-            /* background: linear-gradient(to right, #1bb73f, #77ca76);  */
-            background: linear-gradient(to right, #2575fc, #6a11cb); 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            color: #fff;
+       .password {
+            border: 1px solid #d3d3d3;
+            padding: 40px;
+            width: 500px;
             border-radius: 10px;
-            animation: fadeIn 1.5s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Content div containing announcements, video*/
-        .contents {
-            display: flex;
-            width: 100%;
-            gap: 20px;
-            align-items: stretch; /* Ensure child elements have the same height */
-            height: 200px; 
-        }
-        
-        /* Announcements section */
-        .announcements {
-            flex: 2;
-            background-color: #fff;
-            padding: 15px;
+            background-color: white;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 100%; 
-}
-        body.dark-mode .announcements {
-           background-color: #444;
-           color: white;
-       }
-       
-        
-        .announcements h3 {
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            text-align: justify;
         }
 
-        .announcements h3::before {
-            content: '📢';
+        .password h2 {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
         }
 
-        .announcements .content-box {
-            height: 200px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 5px;
+        .form-group {
+            margin-bottom: 20px;
         }
 
-        .announcements textarea {
+        .form-group label {
+            display: block;
+            font-size: small;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input {
             width: 100%;
-            height: 150px; /* Adjust as needed */
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #d3d3d3;
+            border-radius: 4px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
             border: none;
-            resize: none;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        body.dark-mode .announcements textarea {
-           background-color: #444;
-           color: white;
-       }
-
-        .rightside {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            padding: 0px; 
-            justify-content: space-between; 
-            height: 100%; /* Match height with the contents div */
+            background-color: #08840e;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bolder;
+            transition: background-color 0.3s;
         }
 
-        
-        body.dark-mode .rightside{
-           background-color: #444;
-           color: white;
-       }
-
-        .video-div {
-            background-color: #fff;
-            height: 100%;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
+        .submit-btn:hover {
+            background-color: #1ae108;
+        }  
+        .popup {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 80px;
+            right: 500px;
+            background-color: white;
+            color: green;
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            font-size: 16px;
+            font-weight: bold;
         }
 
-        .video-div iframe {
-            width: 100%;
-            height: 100%;
-        }
    </style>
    <script>
        function toggleDarkMode() {
@@ -398,6 +412,7 @@ if (isset($_GET['logout'])) {
    </script>
 </head>
 <body>
+
 <div class="navbar">
     <div class="left-section">
         <img src="photo/graduation.png" alt="">
@@ -410,7 +425,7 @@ if (isset($_GET['logout'])) {
             <a href="#"><i class="fas fa-user-circle"></i> Profile</a>
             <div class="dropdown-content">
                 <a href="sProfileEdit.html"><i class="fas fa-edit"></i> Edit Profile</a>
-                <a href="sPasswordChange.php"><i class="fas fa-key"></i> Change Password</a>
+                <a href="sPasswordChange.html"><i class="fas fa-key"></i> Change Password</a>
             </div>
         </div>
         <div class="nav-item">
@@ -451,42 +466,48 @@ if (isset($_GET['logout'])) {
     </div>
    <!-- in-containner-->
    <div class="in-container">
-
-    <div class="image-div">
-        <h1>Welcome to Student Portal.</h1>
-    </div>
-   <!--Left Section -->
-    <div class="contents">
-
-        <div class="announcements">
-            <h3>Announcements</h3>
-            <div class="content-box">
-                
-                <textarea name="announce" id="announce"></textarea>
+    <div class="password">
+        <h2>Password Change</h2>
+        <form action="" method="POST">
+            <div class="form-group">
+                <label for="old_password">Old Password</label>
+                <input type="password" id="old_password" name="old_password" required>
             </div>
-        </div>
+            <div class="form-group">
+                <label for="new_password">New Password</label>
+                <input type="password" id="new_password" name="new_password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+            </div>
+            <button type="submit" class="submit-btn">Change Password</button>
+        </form>
 
-        <!-- right Section -->
-        <div class="rightside">
-            <!-- Video Section -->
-            <div class="video-div">
-                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/JqzceJHRWgc?si=08mBvJleQtDW78m7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            </div> 
-            <script type="text/javascript">
-                var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
-                (function() {
-                    var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
-                    s1.async = true;
-                    s1.src = 'https://embed.tawk.to/6730ab034304e3196adfd526/1icb1o1j9';
-                    s1.charset = 'UTF-8';
-                    s1.setAttribute('crossorigin', '*');
-                    s0.parentNode.insertBefore(s1, s0);
-                })();
-            </script>      
-        </div>
+        <?php if (isset($_SESSION['success_message'])): ?>
+            <div id="success-popup" class="popup">
+                <?php echo htmlspecialchars($_SESSION['success_message']); ?>
+            </div>
+            <script>
+                // Show the popup
+                const popup = document.getElementById('success-popup');
+                popup.style.display = 'block';
+
+                // Hide the popup after a few seconds
+                setTimeout(() => {
+                    popup.style.display = 'none';
+                }, 3000); // 3 seconds
+            </script>
+            <?php unset($_SESSION['success_message']); // Clear the message ?>
+        <?php endif; ?>
+
+    </div>
+   </div>
     </div>
 </div>
 </div>
+
+
 </body>
 </html>
 

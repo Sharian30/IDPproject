@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +14,11 @@
            padding: 0;
            box-sizing: border-box;
        }
+       html, body {
+            height: 100%; 
+            overflow: hidden; 
+            margin: 0;
+        }
 
        body {
            font-family: Arial, sans-serif;
@@ -102,6 +108,10 @@
            z-index: 1000;
            transition: visibility 0.3s, opacity 0.3s;
        }
+       .dropdown-content a{
+        font-size: 12px;
+        font-weight: bolder;
+       }
 
        .nav-item:hover .dropdown-content {
            visibility: visible;
@@ -179,6 +189,7 @@
            border-radius: 20px;
            color: white;
            font-size: 12px;
+           font-weight: bold;
            margin-right: 15px;
        }
 
@@ -192,13 +203,21 @@
            text-decoration: none;
            padding: 0;
        }
+       body.dark-mode .logout-btn {
+           color: red;
+       }
 
        .logout-btn:hover {
         color: white;
         background-color: #0babeb;
         border-radius: 20px;
-        padding: 4px;
-           
+        padding: 5px;     
+       }
+       body.dark-mode .logout-btn:hover {
+           color: red;
+           background-color: black;
+           border-radius: 20px;
+           padding: 5px;
        }
 
        /* Dark Mode Adjustments */
@@ -207,9 +226,7 @@
            color: white;
        }
 
-       body.dark-mode .dropdown-content {
-           background-color: #444;
-       }
+      
 
        body.dark-mode .dropdown-content a {
            color: white;
@@ -220,13 +237,14 @@
            color: black;
        }
         .in-container {
-            width: 95%; /* Increase width */
-            max-width: 1400px; /* Increase max-width for larger screens */
+            width: 88%; /* Increase width */
+            max-width: 1300px; /* Increase max-width for larger screens */
             margin: 20px auto;
-            background-color: #f9f9f9;
+            background-color: #e1d5eb;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            align-items: center;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -236,114 +254,88 @@
            color: white;
        }
 
-         /* Image div */
-        .image-div {
-            width: 100%;
-            height: 250px; 
-            /* background: linear-gradient(to right, #1bb73f, #77ca76);  */
-            background: linear-gradient(to right, #2575fc, #6a11cb); 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 34px;
-            color: #fff;
+       .password {
+            border: 1px solid #d3d3d3;
+            padding: 40px;
+            width: 500px;
             border-radius: 10px;
-            animation: fadeIn 1.5s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Content div containing announcements, video*/
-        .contents {
-            display: flex;
-            width: 100%;
-            gap: 20px;
-            align-items: stretch; /* Ensure child elements have the same height */
-        }
-        
-        /* Announcements section */
-        .announcements {
-            flex: 2;
-            background-color: #fff;
-            padding: 15px;
+            background-color: white;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between; /* Ensure content is spaced evenly */
-        }
-        body.dark-mode .announcements {
-           background-color: #444;
-           color: white;
-       }
-       
-        
-        .announcements h3 {
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            text-align: justify;
         }
 
-        .announcements h3::before {
-            content: '📢';
+        .password h2 {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
         }
 
-        .announcements .content-box {
-            height: 200px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 5px;
+        .form-group {
+            margin-bottom: 20px;
         }
 
-        .announcements textarea {
+        .form-group label {
+            display: block;
+            font-size: small;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input {
             width: 100%;
-            height: 200px; /* Adjust as needed */
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #d3d3d3;
+            border-radius: 4px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
             border: none;
-            resize: none;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        body.dark-mode .announcements textarea {
-           background-color: #444;
-           color: white;
-       }
-
-        .rightside {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            padding: 0px; /* Add padding */
-            justify-content: space-between; /* Ensure inner elements are spaced evenly */
-        }
-        
-        body.dark-mode .rightside{
-           background-color: #444;
-           color: white;
-       }
-        
-        .video-div {
-            background-color: #fff;
-            padding: 0;
-            height: 265px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
+            background-color: #08840e;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bolder;
+            transition: background-color 0.3s;
         }
 
-        .video-div iframe {
-            width: 100%;
-            height: 100%;
-        }
+        .submit-btn:hover {
+            background-color: #1ae108;
+        } 
+
+
+.password-container {
+    position: relative;
+    width: 100%;
+}
+
+.password-container input {
+    width: 100%;
+    padding: 8px 10px;
+    padding-right: 30px; /* Space for the eye emoji */
+    border: 1px solid #d3d3d3;
+    border-radius: 4px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px; /* Adjust size of the emoji */
+    cursor: pointer;
+    color: #888;
+    transition: color 0.3s;
+}
+
+.password-toggle:hover {
+    color: #555;
+}
+
+ 
    </style>
    <script>
        function toggleDarkMode() {
@@ -359,6 +351,21 @@
            }
        }
    </script>
+   <script>
+       function togglePasswordVisibility(inputId) {
+    var passwordInput = document.getElementById(inputId);
+    var eyeIcon = document.querySelector(`#toggle-eye-${inputId}`); // Correctly select the corresponding icon
+
+    // Toggle password visibility
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";   // Show password
+        eyeIcon.textContent = "HIDE";   // Open eye emoji
+    } else {
+        passwordInput.type = "password";   // Hide password
+        eyeIcon.textContent = "SHOW";        // Closed eye emoji
+    }
+}
+    </script>
 </head>
 <body>
 <div class="navbar">
@@ -367,7 +374,7 @@
         <h2>SMART STUDENT PORTAL</h2>
     </div>
     <div class="nav-links">
-        <div class="nav-item"><a href="#"><i class="fas fa-home"></i> Home</a></div>
+        <div class="nav-item"><a href="StudentHome.php"><i class="fas fa-home"></i> Home</a></div>
         
         <div class="nav-item">
             <a href="#"><i class="fas fa-user-circle"></i> Profile</a>
@@ -392,7 +399,7 @@
                 <a href="#"><i class="fas fa-clipboard"></i> Result</a>
                 <a href="#"><i class="fas fa-calendar-alt"></i> Class Routine</a>
                 <a href="#"><i class="fas fa-ticket-alt"></i> Exam Routine & Admit Card</a>
-                <a href="BusLocation.html"><i class="fas fa-bus"></i> Buses Location</a>
+                <a href="BusLocation.php"><i class="fas fa-bus"></i> Buses Location</a>
             </div>
         </div>
         <button class="toggle-btn" onclick="toggleDarkMode()">🌙</button>
@@ -414,39 +421,35 @@
     </div>
    <!-- in-containner-->
    <div class="in-container">
-
-    <div class="image-div">
-        <h1>Welcome to Student Portal.</h1>
-    </div>
-   <!--Left Section -->
-    <div class="contents">
-
-        <div class="announcements">
-            <h3>Announcements</h3>
-            <div class="content-box">
-                
-                <textarea name="announce" id="announce"></textarea>
+    <div class="password">
+        <h2>Password Change</h2>
+        <form action="" method="POST">
+            <div class="form-group">
+                <label for="old_password">Old Password</label>
+                <div class="password-container">
+                    <input type="password" id="old_password" name="old_password" required>
+                    <span class="password-toggle" id="toggle-eye-old_password" onclick="togglePasswordVisibility('old_password')">HIDE</span>
+                </div>
             </div>
-        </div>
-
-        <!-- right Section -->
-        <div class="rightside">
-            <!-- Video Section -->
-            <div class="video-div">
-                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/JqzceJHRWgc?si=08mBvJleQtDW78m7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            </div> 
-            <script type="text/javascript">
-                var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
-                (function() {
-                    var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
-                    s1.async = true;
-                    s1.src = 'https://embed.tawk.to/6730ab034304e3196adfd526/1icb1o1j9';
-                    s1.charset = 'UTF-8';
-                    s1.setAttribute('crossorigin', '*');
-                    s0.parentNode.insertBefore(s1, s0);
-                })();
-            </script>      
-        </div>
+            <div class="form-group">
+                <label for="new_password">New Password</label>
+                <div class="password-container">
+                    <input type="password" id="new_password" name="new_password" required>
+                    <span class="password-toggle" id="toggle-eye-new_password" onclick="togglePasswordVisibility('new_password')">HIDE</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <div class="password-container">
+                    <input type="password" id="confirm_password" name="confirm_password" required>
+                    <span class="password-toggle" id="toggle-eye-confirm_password" onclick="togglePasswordVisibility('confirm_password')">HIDE</span>
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn">Change Password</button>
+        </form>
+    </div>
+   </div>
     </div>
 </div>
 </div>
