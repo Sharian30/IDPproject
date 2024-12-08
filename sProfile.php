@@ -1,21 +1,38 @@
-
 <?php
 session_start();
+require_once 'config.php'; // Database configuration file
 
 // Check if the user is logged in
-if (!isset($_SESSION['username']) || !isset($_SESSION['id'])) {
-    header('Location: login.php');
-    exit();
-}
-// Logout logic
-if (isset($_GET['logout'])) {
-    session_unset();
-    session_destroy();
+if (!isset($_SESSION['id'])) {
     header('Location: login.php');
     exit();
 }
 
+// Fetch student information
+$student_id = $_SESSION['id'];
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$sql = "SELECT * FROM StudentInformation WHERE StudentID = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $student_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $student = $result->fetch_assoc();
+} else {
+    echo "<p>User not found.</p>";
+    exit();
+}
+
+$stmt->close();
+$conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -381,6 +398,41 @@ if (isset($_GET['logout'])) {
             width: 100%;
             height: 100%;
         }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+        .profile-header img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-right: 20px;
+            object-fit: cover;
+            border: 2px solid #ddd;
+        }
+        .profile-header div {
+            font-size: 18px;
+        }
+        .profile-header div span {
+            font-weight: bold;
+        }
+        .details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .details div {
+            display: flex;
+            align-items: center;
+        }
+        .details div i {
+            font-size: 18px;
+            margin-right: 10px;
+            color: #555;
+        }
    </style>
    <script>
        function toggleDarkMode() {
@@ -409,7 +461,7 @@ if (isset($_GET['logout'])) {
         <div class="nav-item">
             <a href="sProfile.php"><i class="fas fa-user-circle"></i> Profile</a>
             <div class="dropdown-content">
-                <a href="sProfileEdit.html"><i class="fas fa-edit"></i> Edit Profile</a>
+                <a href="sProfileEdit.php"><i class="fas fa-edit"></i> Edit Profile</a>
                 <a href="sPasswordChange.php"><i class="fas fa-key"></i> Change Password</a>
             </div>
         </div>
@@ -451,44 +503,39 @@ if (isset($_GET['logout'])) {
     </div>
    <!-- in-containner-->
    <div class="in-container">
-
-    <div class="image-div">
-        <h1>Welcome to Student Portal.</h1>
-    </div>
-   <!--Left Section -->
-    <div class="contents">
-
-        <div class="announcements">
-            <h3>Announcements</h3>
-            <div class="content-box">
-                
-                <textarea name="announce" id="announce"></textarea>
+   <div class="profile-header">
+            <img src="data:image/jpeg;base64,<?php echo base64_encode($student['StudentsPhoto']); ?>" alt="Profile Picture">
+            <div>
+                <p><span>Name:</span> <?php echo htmlspecialchars($student['StudentName']); ?></p>
+                <p><span>Student ID:</span> <?php echo htmlspecialchars($student['StudentID']); ?></p>
+                <p><span>Department:</span> <?php echo htmlspecialchars($student['Department']); ?></p>
+                <p><span>Batch:</span> <?php echo htmlspecialchars($student['Batch']); ?></p>
+                <p><span>Semester:</span> <?php echo htmlspecialchars($student['Semester']); ?></p>
             </div>
         </div>
 
-        <!-- right Section -->
-        <div class="rightside">
-            <!-- Video Section -->
-            <div class="video-div">
-                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/JqzceJHRWgc?si=08mBvJleQtDW78m7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            </div> 
-            <script type="text/javascript">
-                var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
-                (function() {
-                    var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
-                    s1.async = true;
-                    s1.src = 'https://embed.tawk.to/6730ab034304e3196adfd526/1icb1o1j9';
-                    s1.charset = 'UTF-8';
-                    s1.setAttribute('crossorigin', '*');
-                    s0.parentNode.insertBefore(s1, s0);
-                })();
-            </script>      
+        <div class="details">
+            <div><i class="fas fa-calendar-alt"></i> <span>Date of Birth:</span> <?php echo htmlspecialchars($student['DateOfBirth']); ?></div>
+            <div><i class="fas fa-venus-mars"></i> <span>Gender:</span> <?php echo htmlspecialchars($student['Gender']); ?></div>
+            <div><i class="fas fa-tint"></i> <span>Blood Group:</span> <?php echo htmlspecialchars($student['BloodGroup']); ?></div>
+            <div><i class="fas fa-envelope"></i> <span>Email:</span> <?php echo htmlspecialchars($student['Email']); ?></div>
+            <div><i class="fas fa-phone"></i> <span>Phone:</span> <?php echo htmlspecialchars($student['PhoneNo']); ?></div>
+            <div><i class="fas fa-map-marker-alt"></i> <span>Address:</span> <?php echo htmlspecialchars($student['Address']); ?></div>
+            <div><i class="fas fa-user"></i> <span>Father's Name:</span> <?php echo htmlspecialchars($student['FathersName']); ?></div>
+            <div><i class="fas fa-briefcase"></i> <span>Father's Profession:</span> <?php echo htmlspecialchars($student['FathersProfession']); ?></div>
+            <div><i class="fas fa-phone"></i> <span>Father's Phone:</span> <?php echo htmlspecialchars($student['FathersPhoneNo']); ?></div>
+            <div><i class="fas fa-user"></i> <span>Mother's Name:</span> <?php echo htmlspecialchars($student['MothersName']); ?></div>
+            <div><i class="fas fa-briefcase"></i> <span>Mother's Profession:</span> <?php echo htmlspecialchars($student['MothersProfession']); ?></div>
+            <div><i class="fas fa-phone"></i> <span>Mother's Phone:</span> <?php echo htmlspecialchars($student['MothersPhoneNo']); ?></div>
         </div>
+
+   </div>
     </div>
 </div>
 </div>
 </body>
 </html>
+
 
 
 
