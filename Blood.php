@@ -1,3 +1,28 @@
+<?php
+// Database connection
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "portal";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Initialize variables
+$bloodGroupFilter = "";
+$query = "SELECT * FROM blood";
+
+// Apply search filter if BloodGroup is specified
+if (isset($_GET['search']) && !empty($_GET['bloodGroup'])) {
+    $bloodGroupFilter = $_GET['bloodGroup'];
+    $query = "SELECT * FROM blood WHERE BloodGroup = '$bloodGroupFilter'";
+}
+
+$result = $conn->query($query);
+?>
 
 <!DOCTYPE html>
 <html lang="en">
