@@ -25,8 +25,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($id) && !empty($password)) {
         if (is_numeric($id)) {
             if (strlen($id) == 9) {
-                // Check StudentInformation table for 9-digit IDs
-                $stmt = $conn->prepare("SELECT StudentName FROM StudentInformation WHERE StudentID = ? AND StudentsPassword = ?");
+
+                $stmt = $conn->prepare("SELECT StudentName FROM StudentInformation WHERE StudentID = ? AND StudentPassword = ?");
+
                 $stmt->bind_param("is", $id, $password);
                 $stmt->execute();
                 $result = $stmt->get_result();

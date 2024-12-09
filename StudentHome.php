@@ -429,6 +429,7 @@ if (isset($_GET['logout'])) {
                 <a href="#"><i class="fas fa-clipboard"></i> Result</a>
                 <a href="#"><i class="fas fa-calendar-alt"></i> Class Routine</a>
                 <a href="#"><i class="fas fa-ticket-alt"></i> Exam Routine & Admit Card</a>
+                <a href="Blood.php"><i class="fas fa-tint"></i></i> Blood</a>
                 <a href="BusLocation.php"><i class="fas fa-bus"></i> Buses Location</a>
             </div>
         </div>

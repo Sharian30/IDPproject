@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // Fetch the current password from the database
-        $sql = "SELECT StudentsPassword FROM StudentInformation WHERE StudentID = ?";
+        $sql = "SELECT StudentPassword FROM StudentInformation WHERE StudentID = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Verify the old password
             if ($old_password === $current_password) {
                 // Update the password in the database
-                $update_sql = "UPDATE StudentInformation SET StudentsPassword = ? WHERE StudentID = ?";
+                $update_sql = "UPDATE StudentInformation SET StudentPassword = ? WHERE StudentID = ?";
                 $update_stmt = $conn->prepare($update_sql);
                 $update_stmt->bind_param("si", $new_password, $user_id);
 
